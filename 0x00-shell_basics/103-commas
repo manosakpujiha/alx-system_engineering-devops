@@ -1,2 +1,2 @@
 #!/bin/bash
-0 string SCHOOL School data
+ls -map | sort -d
