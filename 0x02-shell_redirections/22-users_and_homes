@@ -1,2 +1,2 @@
 #!/bin/bash
-grep [[:alpha:]*] /etc/ssh/sshd_config
+cut -d ':' -f 1,6 /etc/passwd | sort
