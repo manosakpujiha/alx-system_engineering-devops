@@ -1,5 +1,4 @@
 # Shell Loops, Conditions,
-![](https://phoenixnap.com/kb/wp-content/uploads/2021/12/individual.sh-for-loop-script.png)
 
 ## Learning objectives
 
