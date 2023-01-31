@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
-# prints 'To infinity and beyond' in infinite loop with 2 sec delay, cannot be terminated
-trap "echo 'I am invincible!!!'" SIGTERM
-while ((1)); do
-    echo 'To infinity and beyond'
+# This script displays "To infinity and beyond indefinitely"
+# and displays "I am invincible!!!" when receiving a SIGTERM signal from
+# the 67-stop_me_if_you_can file
+
+count=1
+
+#trap  "echo I am invincible!!!" SIGTERM
+
+while [ $count ]
+do
+    trap  "echo I am invincible!!!" SIGTERM
+    echo "To infinity and beyond"
     sleep 2
 done

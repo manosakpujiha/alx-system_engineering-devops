@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
-# prints 'To infinity and beyond' in infinite loop with 2 sec delay
-while ((1)); do
-    echo 'To infinity and beyond'
-    sleep 2
+# This script that displays 'To infinity and beyond' indefinitely
+
+count=1
+
+while [ $count ]
+do
+	echo "To infinity and beyond"
+	sleep 2
 done
