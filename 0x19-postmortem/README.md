@@ -1,3 +1,7 @@
+![alx postmortem](https://github.com/manosakpujiha/alx-system_engineering-devops/assets/70998471/45d4c6da-0f69-4631-a9b7-ddc225c69993)
+
+
+
 Issue Summary:
 On May 5th, 2023, from 2:00 PM to 4:00 PM (EST), our web application experienced a partial outage, impacting approximately 60% of our users. Users were unable to access the login page, and those already logged in experienced slow page load times and intermittent errors.
 
