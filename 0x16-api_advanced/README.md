@@ -12,6 +12,3 @@ This projects deals with getting data from an API and manipulating the type of d
 | 1-top_ten.py | Queries the Reddit API and prints the titles of the first 10 posts listed for a given subreddit |
 | 2-recurse.py | Queries the Reddit API recursively |
 
-## Authors :black_nib:
-
-[Esteban De La Hoz](https://www.linkedin.com/in/esteban-de-la-hoz-romero-b6270017b/) | [Twitter](https://twitter.com/Esteban18911) | [GitHub](https://github.com/Esteban18911)
