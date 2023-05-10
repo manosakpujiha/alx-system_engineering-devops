@@ -1,67 +1,61 @@
 #!/usr/bin/python3
 """A file to make a query to an endpoint"""
-from re import findall, IGNORECASE
 from requests import get
 
+REDDIT = "https://www.reddit.com/"
+HEADERS = {'user-agent': 'my-app/0.0.1'}
 
-def count_words(subreddit, word_list, word_totals={}, after=''):
-    """ Tallies appearances of search terms in all "hot" post titles for a
-    given subreddit.
 
-        Recursively queries Reddit API, one page per frame, to parse titles of
-    all "hot" posts and count occurances of each word in a given list of
-    search terms. Once finished, prints all non-zero totals sotrted first in
-    descending order by count, and then in alphabetic order.
-
-    Args:
-        subreddit (str): subreddit to query
-        word_list (list): list of words to search for in titles of all posts
-           in "hot"
-        word_totals (dict): running total of search term occurances prior to
-            current page/frame
-        after (str): API name for last post in previous page
-
-    Return:
-        dict of running word totals from titles in all API pages parsed in
-    current recursion frame and those below
+def count_words(subreddit, word_list, after="", word_dic={}):
     """
-    limit = 100
-    # (adding request parameter raw_json deactivates default ampersand escape)
-    url = 'https://www.reddit.com/r/{}/hot.json?raw_json=1&after={}&limit={}'
-    response = get(url.format(subreddit, after, limit),
-                   headers={'User-Agent': 'allelomorph-app2'})
-
-    # 404 or other error, or no search terms
-    if response.status_code != 200 or len(word_list) == 0:
-        return
-
-    regex = '^{}$|^{} +| +{} +| +{}$'
-    word_count = dict.fromkeys([word.lower() for word in word_list], 0)
-    current_page_list = response.json().get('data').get('children', [])
-
-    # search titles in current page for terms
-    for post in current_page_list:
-        title = post.get('data').get('title', '')
+    Returns a list containing the titles of all hot articles for a
+    given subreddit. If no results are found for the given subreddit,
+    the function should return None.
+    """
+    if not word_dic:
         for word in word_list:
-            count = len(findall(regex.format(word, word, word, word),
-                                title, IGNORECASE))
-            word_count[word.lower()] += count
+            word_dic[word] = 0
 
-    # update totals
-    for key, value in word_count.items():
-        if key in word_totals:
-            word_totals[key] += value
-        else:
-            word_totals[key] = value
+    if after is None:
+        word_list = [[key, value] for key, value in word_dic.items()]
+        word_list = sorted(word_list, key=lambda x: (-x[1], x[0]))
+        for w in word_list:
+            if w[1]:
+                print("{}: {}".format(w[0].lower(), w[1]))
+        return None
 
-    # last page reached, print totals
-    if len(current_page_list) < limit:
-        for item in sorted(word_totals.items(),
-                           key=lambda item: (-item[1], item[0])):
-            if item[1] > 0:
-                print('{}: {}'.format(item[0], item[1]))
-        return
+    url = REDDIT + "r/{}/hot/.json".format(subreddit)
 
-    # still more titles to parse, recurse to next frame
-    after = current_page_list[-1].get('data').get('name', '')
-    return count_words(subreddit, word_list, word_totals, after)
+    params = {
+        'limit': 100,
+        'after': after
+    }
+
+    r = get(url, headers=HEADERS, params=params, allow_redirects=False)
+
+    if r.status_code != 200:
+        return None
+
+    try:
+        js = r.json()
+
+    except ValueError:
+        return None
+
+    try:
+
+        data = js.get("data")
+        after = data.get("after")
+        children = data.get("children")
+        for child in children:
+            post = child.get("data")
+            title = post.get("title")
+            lower = [s.lower() for s in title.split(' ')]
+
+            for w in word_list:
+                word_dic[w] += lower.count(w.lower())
+
+    except:
+        return None
+
+    count_words(subreddit, word_list, after, word_dic)
